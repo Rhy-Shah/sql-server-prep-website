@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SQL Server Interview Prep — Sr. Database Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0c0e13;--bg2:#12151c;--bg3:#1a1d27;--bg4:#1e2230;
+  --border:#1e2230;--border2:#2d3348;
+  --text:#c8ccd4;--text2:#9ca3af;--text3:#6b7280;
+  --heading:#f1f3f7;--subheading:#e2e5eb;
+  --accent:#3b82f6;--accent2:#8b5cf6;--accent3:#6366f1;
+  --green:#10b981;--green2:#34d399;--green-bg:#064e3b;
+  --code-bg:#161921;--code-text:#a5f3a0;
+  --h3-color:#a5b4fc;
+}
+html{font-size:16px;scroll-behavior:smooth}
+body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;overflow:hidden}
+
+/* ─── Sidebar ─── */
+.sidebar{width:300px;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;height:100vh;position:fixed;left:0;top:0;z-index:100;transition:transform .25s ease}
+.sidebar-logo{padding:24px 20px 16px;border-bottom:1px solid var(--border)}
+.logo-badge{display:inline-block;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-weight:800;font-size:.8rem;padding:4px 10px;border-radius:6px;letter-spacing:1.5px}
+.logo-title{font-size:1.06rem;font-weight:700;color:var(--subheading);margin-top:8px;line-height:1.2}
+.logo-sub{font-size:.75rem;color:var(--text3);margin-top:2px}
+.progress-area{padding:14px 20px;border-bottom:1px solid var(--border)}
+.progress-track{height:4px;background:var(--bg4);border-radius:2px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:2px;transition:width .35s ease}
+.progress-label{font-size:.68rem;color:var(--text3);margin-top:6px}
+.nav{flex:1;overflow-y:auto;padding:8px 0}
+.nav::-webkit-scrollbar{width:4px}
+.nav::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+.chapter-item{display:flex;align-items:center;gap:10px;padding:10px 20px;cursor:pointer;border-left:3px solid transparent;transition:background .15s}
+.chapter-item:hover{background:var(--bg3)}
+.chapter-item.active{background:var(--bg3);border-left-color:var(--accent)}
+.chapter-icon{font-size:1.12rem;width:28px;text-align:center;flex-shrink:0}
+.chapter-title{font-size:.81rem;font-weight:600;color:var(--subheading);line-height:1.3}
+.chapter-meta{font-size:.68rem;color:var(--text3);margin-top:1px}
+.section-list{padding-bottom:4px}
+.section-item{display:flex;align-items:center;gap:8px;padding:6px 20px 6px 56px;cursor:pointer;font-size:.75rem;color:var(--text2);transition:all .15s}
+.section-item:hover{color:var(--subheading);background:rgba(255,255,255,.02)}
+.section-item.active{color:var(--subheading);background:var(--bg4)}
+.check{font-size:.75rem;color:var(--border2);width:16px;flex-shrink:0}
+.check.done{color:var(--green)}
+
+/* ─── Main ─── */
+.main{margin-left:300px;flex:1;overflow-y:auto;height:100vh}
+.content{max-width:820px;margin:0 auto;padding:40px 32px 60px}
+.breadcrumb{font-size:.72rem;color:var(--text3);letter-spacing:.5px;text-transform:uppercase;margin-bottom:8px}
+.page-title{font-size:1.75rem;font-weight:800;color:var(--heading);margin-bottom:28px;line-height:1.25;letter-spacing:-.5px}
+
+/* Content blocks */
+.body-content{line-height:1.7}
+.body-content h3{font-size:1rem;font-weight:700;color:var(--h3-color);margin:24px 0 10px;line-height:1.3}
+.body-content p{margin:0 0 8px;font-size:.875rem;line-height:1.75;color:var(--text)}
+.body-content strong{color:var(--subheading);font-weight:600}
+.body-content .bullet{display:flex;gap:8px;margin:4px 0;font-size:.875rem;line-height:1.65;padding-left:4px}
+.body-content .bullet-dot{color:var(--accent);flex-shrink:0;margin-top:1px}
+.body-content .code-line{font-family:'JetBrains Mono','IBM Plex Mono',monospace;font-size:.78rem;color:var(--code-text);background:var(--code-bg);padding:2px 10px;margin:1px 0;border-left:2px solid var(--border2);white-space:pre-wrap;line-height:1.6}
+.body-content .comment-line{font-family:'JetBrains Mono','IBM Plex Mono',monospace;font-size:.78rem;color:var(--text3);font-style:italic;padding:2px 10px;margin:1px 0}
+.body-content .spacer{height:12px}
+
+/* Footer */
+.footer{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:40px;padding-top:24px;border-top:1px solid var(--border);flex-wrap:wrap}
+.btn{padding:10px 20px;border-radius:8px;border:none;cursor:pointer;font-size:.81rem;font-weight:600;font-family:inherit;transition:all .15s}
+.btn:active{transform:scale(.97)}
+.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent3));color:#fff}
+.btn-primary:hover{filter:brightness(1.1)}
+.btn-outline{background:transparent;border:1px solid var(--border2);color:var(--text2)}
+.btn-outline:hover{border-color:var(--text2)}
+.btn-mark{background:var(--bg4);color:var(--text2)}
+.btn-mark:hover{background:var(--border2)}
+.btn-complete{background:var(--green-bg);color:var(--green2)}
+.btn:disabled{opacity:.3;cursor:not-allowed;pointer-events:none}
+
+/* Mobile */
+.mobile-header{display:none;padding:12px 16px;background:var(--bg2);border-bottom:1px solid var(--border);align-items:center;gap:12px;position:sticky;top:0;z-index:10}
+.menu-btn{background:none;border:1px solid var(--border2);color:var(--subheading);font-size:1.12rem;padding:4px 10px;border-radius:6px;cursor:pointer}
+.mobile-title{font-size:.875rem;font-weight:600;color:var(--subheading)}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:90;display:none}
+.overlay.show{display:block}
+
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0)}
+  .main{margin-left:0}
+  .mobile-header{display:flex}
+  .content{padding:24px 16px 60px}
+  .page-title{font-size:1.35rem}
+  .footer{gap:8px}
+  .btn{padding:8px 14px;font-size:.75rem}
+}
+</style>
+</head>
+<body>
+
+<div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+
+<aside class="sidebar" id="sidebar"></aside>
+
+<main class="main" id="main">
+  <div class="mobile-header">
+    <button class="menu-btn" onclick="openSidebar()">☰</button>
+    <span class="mobile-title" id="mobileTitle"></span>
+  </div>
+  <div class="content" id="content"></div>
+</main>
+
+<script>
+const chapters = [
+  {
+    id: 1, title: "SQL Server Foundations", icon: "🏗️",
+    sections: [
+      {
+        title: "SQL Server Architecture",
+        content: `**How SQL Server Works Under the Hood**
+
+SQL Server is a relational database management system (RDBMS). When a query hits SQL Server, here's the pipeline:
+
+• **Protocol Layer** — receives the query via TDS (Tabular Data Stream) protocol
+• **Query Parser** — checks syntax, builds a parse tree
+• **Algebrizer** — resolves names (tables, columns), type checking
+• **Query Optimizer** — generates execution plan (the MOST important concept for your interview)
+• **Storage Engine** — reads/writes data from disk or memory
+
+**Key Memory Components:**
+• **Buffer Pool** — cached data pages in RAM. SQL Server reads 8KB pages from disk into the buffer pool. A "page" is the fundamental unit of storage.
+• **Plan Cache** — stores compiled execution plans so they don't need recompilation
+• **Log Buffer** — write-ahead log entries before flushing to disk
+
+**Storage Hierarchy:**
+Database → Filegroups → Files → Extents (8 pages) → Pages (8KB)
+
+**Interview Tip:** If asked "what happens when you run a SELECT query," walk through this full pipeline. It shows deep understanding.`
+      },
+      {
+        title: "Data Types — What to Use When",
+        content: `**Choosing the right data type is a design question they WILL ask.**
+
+**Numeric Types:**
+• **INT** (4 bytes) — most common for IDs, counts
+• **BIGINT** (8 bytes) — when INT range (2.1 billion) isn't enough
+• **DECIMAL(p,s)** — exact precision for money/financial data. NEVER use FLOAT for money!
+• **BIT** — boolean (0/1/NULL)
+• **MONEY** — avoid it. Use DECIMAL(19,4) instead. MONEY has rounding issues.
+
+**String Types:**
+• **VARCHAR(n)** — variable-length, non-Unicode (1 byte/char). Use for English-only data.
+• **NVARCHAR(n)** — variable-length, Unicode (2 bytes/char). Use when you need international characters.
+• **VARCHAR(MAX) / NVARCHAR(MAX)** — up to 2GB. Stored differently when > 8000 bytes (off-row).
+• **CHAR(n)** — fixed-length. Only use for codes like state abbreviations CHAR(2).
+
+**Date Types:**
+• **DATE** — date only (3 bytes)
+• **DATETIME2(7)** — preferred over DATETIME. More precision, wider range.
+• **DATETIMEOFFSET** — includes timezone info
+
+**Insurance Domain Tip:** Ideal Concepts handles insurance data. Think about: policy numbers (VARCHAR), premium amounts (DECIMAL(19,4)), dates of birth (DATE), state codes (CHAR(2)).
+
+**Common Interview Question:** "Why not use VARCHAR(MAX) everywhere?"
+Answer: It prevents certain optimizations. SQL Server handles MAX types differently — they can be stored off-row, can't be used as index keys, and the optimizer makes different cardinality estimates.`
+      },
+      {
+        title: "Tables, Constraints & Normalization",
+        content: `**Table Design is the foundation of everything.**
+
+**Constraints — Data Integrity Guards:**
+• **PRIMARY KEY** — uniquely identifies each row. Creates a clustered index by default.
+• **FOREIGN KEY** — enforces referential integrity between tables. CASCADE options: DELETE, UPDATE, SET NULL, SET DEFAULT, NO ACTION
+• **UNIQUE** — no duplicate values (allows one NULL by default)
+• **CHECK** — validates data against a condition: CHECK (Age >= 0)
+• **DEFAULT** — provides a value when none is specified
+• **NOT NULL** — column must have a value
+
+**Normalization (they WILL ask this):**
+• **1NF** — No repeating groups. Each cell has one atomic value.
+• **2NF** — 1NF + No partial dependencies (every non-key column depends on the FULL primary key)
+• **3NF** — 2NF + No transitive dependencies (non-key columns don't depend on other non-key columns)
+• **BCNF** — Every determinant is a candidate key
+
+**Example in Insurance Context:**
+BAD (unnormalized): Policy table with Carrier1, Carrier2, Carrier3 columns
+GOOD (1NF): Separate PolicyCarrier junction table
+
+**When to DENORMALIZE:**
+• Reporting/read-heavy workloads
+• When JOINs become too expensive
+• Data warehousing scenarios
+• Always denormalize with intention, not laziness
+
+**Interview Tip:** Be ready to design a simple schema on the spot. For an insurance company: Agents, Policies, Carriers, Clients, Enrollments.`
+      }
+    ]
+  },
+  {
+    id: 2, title: "T-SQL Mastery", icon: "⚡",
+    sections: [
+      {
+        title: "Joins — The Complete Picture",
+        content: `**Every database interview tests JOIN knowledge.**
+
+**Types of JOINs:**
+• **INNER JOIN** — only matching rows from both tables
+• **LEFT JOIN** (LEFT OUTER JOIN) — all rows from left + matches from right (NULLs for non-matches)
+• **RIGHT JOIN** — all rows from right + matches from left
+• **FULL OUTER JOIN** — all rows from both tables
+• **CROSS JOIN** — cartesian product (every row × every row). Useful for generating combinations.
+• **SELF JOIN** — joining a table to itself (e.g., employee → manager hierarchy)
+
+**Critical: APPLY Operators (SQL Server specific!)**
+• **CROSS APPLY** — like INNER JOIN but for table-valued functions or correlated subqueries. Returns rows only when the right side produces results.
+• **OUTER APPLY** — like LEFT JOIN version. Returns all left rows even if right side returns nothing.
+
+-- Get each agent's most recent 3 policies:
+SELECT a.AgentName, p.PolicyNumber, p.EffectiveDate
+FROM Agents a
+CROSS APPLY (
+    SELECT TOP 3 PolicyNumber, EffectiveDate
+    FROM Policies
+    WHERE Policies.AgentID = a.AgentID
+    ORDER BY EffectiveDate DESC
+) p;
+
+**Why CROSS APPLY matters:** It's often faster than correlated subqueries and more flexible than JOINs for "top N per group" problems.
+
+**Interview Trap:** "What's the difference between LEFT JOIN and LEFT OUTER JOIN?"
+Answer: They're identical. OUTER is optional syntax.
+
+**Performance Note:** JOIN order doesn't matter for correctness (optimizer reorders), but it matters for readability. Always filter early with WHERE clauses.`
+      },
+      {
+        title: "Window Functions — Your Secret Weapon",
+        content: `**Window functions are advanced SQL that impresses interviewers.**
+
+They perform calculations across a set of rows RELATED to the current row, without collapsing rows like GROUP BY.
+
+**Syntax Pattern:**
+FUNCTION_NAME() OVER (
+    [PARTITION BY columns]
+    [ORDER BY columns]
+    [ROWS/RANGE frame]
+)
+
+**Ranking Functions:**
+• **ROW_NUMBER()** — unique sequential number (1,2,3,4)
+• **RANK()** — same value = same rank, gaps after ties (1,2,2,4)
+• **DENSE_RANK()** — same rank, NO gaps (1,2,2,3)
+• **NTILE(n)** — divides rows into n buckets
+
+**Aggregate Window Functions:**
+• SUM() OVER (...) — running totals
+• AVG() OVER (...) — moving averages
+• COUNT() OVER (...) — running counts
+
+**Offset Functions:**
+• **LAG(col, n)** — value from n rows BEFORE
+• **LEAD(col, n)** — value from n rows AFTER
+• **FIRST_VALUE(col)** — first value in the window
+• **LAST_VALUE(col)** — last value (careful with default frame!)
+
+**Practical Example — Running Premium Total:**
+SELECT PolicyID, Premium,
+    SUM(Premium) OVER (ORDER BY EffectiveDate
+        ROWS BETWEEN UNBOUNDED PRECEDING
+        AND CURRENT ROW) AS RunningTotal,
+    LAG(Premium, 1) OVER (ORDER BY EffectiveDate)
+        AS PreviousPremium
+FROM Policies;
+
+**Frame Specification (advanced):**
+• ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW — default for ORDER BY
+• ROWS BETWEEN 3 PRECEDING AND 3 FOLLOWING — sliding window of 7 rows
+• RANGE vs ROWS: RANGE treats ties as one group, ROWS treats each row individually
+
+**Interview Power Move:** If asked to find "the second highest salary" or "top N per group," use ROW_NUMBER() with a CTE.`
+      },
+      {
+        title: "CTEs, Subqueries & Temp Tables",
+        content: `**When to use what — interviewers love asking this.**
+
+**Common Table Expressions (CTEs):**
+WITH ActivePolicies AS (
+    SELECT PolicyID, AgentID, Premium
+    FROM Policies
+    WHERE Status = 'Active'
+)
+SELECT a.AgentName, SUM(ap.Premium) AS TotalPremium
+FROM Agents a
+JOIN ActivePolicies ap ON a.AgentID = ap.AgentID
+GROUP BY a.AgentName;
+
+**CTE Characteristics:**
+• Readable and self-documenting
+• Scoped to a single statement
+• NOT materialized (re-evaluated each time referenced)
+• Can be recursive (for hierarchies)
+
+**Recursive CTEs (frequently asked):**
+WITH OrgChart AS (
+    -- Anchor: top-level managers
+    SELECT EmpID, Name, ManagerID, 0 AS Level
+    FROM Employees WHERE ManagerID IS NULL
+    UNION ALL
+    -- Recursive: their reports
+    SELECT e.EmpID, e.Name, e.ManagerID, oc.Level + 1
+    FROM Employees e
+    JOIN OrgChart oc ON e.ManagerID = oc.EmpID
+)
+SELECT * FROM OrgChart;
+
+**Temp Tables (#temp):**
+• Physically created in tempdb
+• Have statistics (optimizer can use them!)
+• Can be indexed
+• Best for: large intermediate result sets, multiple references
+
+**Table Variables (@table):**
+• In-memory (mostly)
+• NO statistics (optimizer assumes 1 row — dangerous for large sets!)
+• Best for: small result sets (< 1000 rows)
+
+**Decision Framework:**
+• Need it once, readable → CTE
+• Need it multiple times, large data → #temp table
+• Small lookup, < 1000 rows → @table variable
+• Recursive/hierarchical → Recursive CTE`
+      },
+      {
+        title: "Advanced T-SQL Patterns",
+        content: `**Patterns that show you're senior-level.**
+
+**MERGE Statement (Upsert):**
+MERGE INTO TargetTable AS t
+USING SourceTable AS s ON t.ID = s.ID
+WHEN MATCHED THEN
+    UPDATE SET t.Name = s.Name
+WHEN NOT MATCHED BY TARGET THEN
+    INSERT (ID, Name) VALUES (s.ID, s.Name)
+WHEN NOT MATCHED BY SOURCE THEN DELETE;
+
+Caution: MERGE has known bugs in SQL Server. Always use WITH (HOLDLOCK) and be cautious in production.
+
+**PIVOT / UNPIVOT:**
+SELECT AgentID, [Health], [Life], [Auto]
+FROM (
+    SELECT AgentID, InsuranceType, Premium
+    FROM Policies
+) src
+PIVOT (
+    SUM(Premium) FOR InsuranceType
+    IN ([Health], [Life], [Auto])
+) pvt;
+
+**Dynamic SQL:**
+DECLARE @sql NVARCHAR(MAX);
+SET @sql = N'SELECT PolicyID, '
+    + QUOTENAME(@col) + N' FROM Policies';
+EXEC sp_executesql @sql;
+
+Always use sp_executesql over EXEC() — it allows parameterization and prevents SQL injection.
+
+**TRY...CATCH Error Handling:**
+BEGIN TRY
+    BEGIN TRANSACTION;
+    -- your operations
+    COMMIT;
+END TRY
+BEGIN CATCH
+    IF @@TRANCOUNT > 0 ROLLBACK;
+    THROW;
+END CATCH;
+
+**GROUPING SETS / CUBE / ROLLUP:**
+SELECT State, InsuranceType, SUM(Premium)
+FROM Policies
+GROUP BY GROUPING SETS (
+    (State, InsuranceType),
+    (State),
+    ()
+);
+
+These generate multiple levels of aggregation in one query — much faster than UNION ALL of separate GROUP BYs.`
+      }
+    ]
+  },
+  {
+    id: 3, title: "Stored Procedures & Programming", icon: "🔧",
+    sections: [
+      {
+        title: "Stored Procedure Design",
+        content: `**This is a CORE requirement of the JD. Expect to write one live.**
+
+**Basic Structure:**
+CREATE OR ALTER PROCEDURE dbo.usp_GetAgentPolicies
+    @AgentID INT,
+    @StartDate DATE = NULL,
+    @TotalPremium DECIMAL(19,4) OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT PolicyID, PolicyNumber, Premium, EffectiveDate
+    FROM Policies
+    WHERE AgentID = @AgentID
+      AND (@StartDate IS NULL
+           OR EffectiveDate >= @StartDate);
+
+    SELECT @TotalPremium = SUM(Premium)
+    FROM Policies
+    WHERE AgentID = @AgentID;
+END;
+
+**Best Practices:**
+• Always use **SET NOCOUNT ON** — reduces network traffic
+• Use schema prefix (dbo.) — avoids extra name resolution
+• Name with **usp_** prefix (user stored procedure)
+• NEVER use **sp_** prefix — SQL Server checks master database first for sp_ procedures!
+• Use TRY...CATCH with explicit transactions
+• Validate inputs early, fail fast
+• Avoid SELECT * — list columns explicitly
+• Use OUTPUT parameters instead of return values for data
+
+**Parameter Sniffing (CRITICAL interview topic):**
+SQL Server compiles a plan based on the FIRST parameter values used. If those values are atypical, the plan may be terrible for subsequent calls.
+
+**Fixes for parameter sniffing:**
+• OPTION (RECOMPILE) — recompiles every execution
+• OPTIMIZE FOR (@param = typical_value)
+• OPTIMIZE FOR UNKNOWN — uses average statistics
+• Local variable assignment (copy params to local vars)
+
+**Interview Question:** "Your stored proc runs fast with one parameter value but slow with another. What's happening?"
+Answer: Parameter sniffing. Explain the concept and at least 2 mitigation strategies.`
+      },
+      {
+        title: "Views, Functions & Triggers",
+        content: `**Three object types that round out your T-SQL programming skills.**
+
+**Views:**
+CREATE VIEW dbo.vw_ActivePolicies AS
+SELECT p.PolicyID, p.Premium,
+       a.AgentName, c.CarrierName
+FROM Policies p
+JOIN Agents a ON p.AgentID = a.AgentID
+JOIN Carriers c ON p.CarrierID = c.CarrierID
+WHERE p.Status = 'Active';
+
+• Simplify complex queries
+• Provide security abstraction (grant SELECT on view, not base tables)
+• **Indexed views** (materialized) — physically stored, auto-updated, huge perf gains
+• **WITH SCHEMABINDING** — required for indexed views, prevents altering underlying tables
+
+**User-Defined Functions (UDFs):**
+
+Scalar UDF (returns single value — USE SPARINGLY, they're slow row-by-row):
+CREATE FUNCTION dbo.fn_CalculateAge(@DOB DATE)
+RETURNS INT AS BEGIN
+    RETURN DATEDIFF(YEAR, @DOB, GETDATE()) -
+        CASE WHEN DATEADD(YEAR,
+            DATEDIFF(YEAR, @DOB, GETDATE()), @DOB)
+            > GETDATE() THEN 1 ELSE 0 END;
+END;
+
+**Inline Table-Valued Function** (MUCH better performance):
+CREATE FUNCTION dbo.fn_GetAgentPolicies(@AgentID INT)
+RETURNS TABLE AS RETURN
+    SELECT PolicyID, Premium
+    FROM Policies WHERE AgentID = @AgentID;
+
+**Key Rule:** Inline TVFs > Multi-statement TVFs > Scalar UDFs (performance order)
+
+**Triggers:**
+• **INSERTED** and **DELETED** are virtual tables inside triggers
+• **AFTER** triggers (most common) vs **INSTEAD OF** triggers
+• Use sparingly — they're hidden logic, hard to debug
+• NEVER put business logic in triggers if you can avoid it`
+      }
+    ]
+  },
+  {
+    id: 4, title: "Indexing & Performance Tuning", icon: "🚀",
+    sections: [
+      {
+        title: "Index Types Deep Dive",
+        content: `**Performance tuning is THE #1 skill they want. Master this chapter.**
+
+**Clustered Index:**
+• Defines the PHYSICAL order of data on disk
+• Only ONE per table (it IS the table)
+• Leaf level = actual data rows
+• Usually on PRIMARY KEY
+• Best on: narrow, unique, ever-increasing columns (INT IDENTITY)
+• Avoid on: frequently updated columns, wide columns
+
+**Non-Clustered Index:**
+• Separate structure pointing to data
+• Leaf level = index key + pointer to clustered index key
+• Up to 999 per table (don't do this)
+• Can have INCLUDED columns (leaf-level only, not in the B-tree)
+
+CREATE NONCLUSTERED INDEX IX_Policies_AgentID
+ON Policies (AgentID)
+INCLUDE (PolicyNumber, Premium, EffectiveDate);
+
+This is a **"covering index"** — the query can be satisfied entirely from the index without touching the base table (no Key Lookup!).
+
+**Filtered Index:**
+CREATE INDEX IX_ActivePolicies
+ON Policies (AgentID, EffectiveDate)
+WHERE Status = 'Active';
+
+Smaller, faster, less storage. Perfect for queries that always filter on the same condition.
+
+**Columnstore Index:**
+• Stores data by COLUMN instead of row
+• Massive compression (10x)
+• Perfect for analytical/aggregate queries
+• SQL Server 2016+ allows nonclustered columnstore on OLTP tables
+
+**Heap (no clustered index):**
+• Data stored in no particular order
+• Generally bad for OLTP — tables should almost always have a clustered index
+• Exception: staging/bulk load tables
+
+**Index Maintenance:**
+• Fragmentation < 10%: do nothing
+• 10-30%: REORGANIZE (online, minimal locking)
+• > 30%: REBUILD (more thorough, can be online in Enterprise)`
+      },
+      {
+        title: "Reading Execution Plans",
+        content: `**If you can't read an execution plan, you can't performance tune.**
+
+**How to get one:**
+• SET STATISTICS IO ON — shows logical/physical reads
+• SET STATISTICS TIME ON — shows CPU and elapsed time
+• Actual Execution Plan (Ctrl+M in SSMS) — shows real row counts
+• Estimated Execution Plan (Ctrl+L) — doesn't execute
+
+**Key Operators to Know:**
+
+• **Table Scan** — reads EVERY row. Bad on large tables. No useful index.
+• **Index Scan** — reads entire index. Better than table scan but still not ideal.
+• **Index Seek** — goes directly to matching rows via B-tree. THIS IS WHAT YOU WANT.
+• **Key Lookup** — after index seek, goes back to clustered index for additional columns. Fix with INCLUDE columns.
+• **Nested Loop** — for each row in outer, scan inner. Good for small outer sets.
+• **Hash Match** — builds hash table from smaller input. Good for large unsorted joins.
+• **Merge Join** — like merging two sorted lists. Very efficient when both inputs sorted.
+• **Sort** — sorts data. Expensive if unexpected — often means missing index.
+
+**What to Look For:**
+• Yellow warning triangles — implicit conversions, missing statistics
+• Fat arrows — large data flow
+• Mismatch between estimated and actual rows — stale statistics
+• Key Lookups — add INCLUDE columns to eliminate
+• Scans on large tables — add appropriate indexes
+• Sort operators — can you add an index that pre-sorts?
+
+**The Golden Metrics (SET STATISTICS IO ON):**
+• **Logical reads** — pages read from buffer pool. THIS is what you optimize.
+• **Physical reads** — pages read from disk (cold cache)
+• **Read-ahead reads** — prefetched pages
+
+**Interview Move:** Always say "I'd look at the execution plan" when asked about slow queries.`
+      },
+      {
+        title: "Query Optimization Strategies",
+        content: `**Practical techniques to make queries faster.**
+
+**1. SARGability (Search ARGument ABLE):**
+A WHERE clause is SARGable if the optimizer can use an index seek.
+
+BAD (non-SARGable):
+WHERE YEAR(EffectiveDate) = 2025
+WHERE Premium * 1.1 > 1000
+WHERE LastName LIKE '%son'
+
+GOOD (SARGable):
+WHERE EffectiveDate >= '2025-01-01'
+    AND EffectiveDate < '2026-01-01'
+WHERE Premium > 1000 / 1.1
+WHERE LastName LIKE 'John%'
+
+**2. Implicit Conversions:**
+If you compare VARCHAR column to NVARCHAR parameter, SQL Server converts EVERY row. Fix: match data types. Use N'value' for NVARCHAR comparisons.
+
+**3. Avoiding Common Anti-Patterns:**
+• **SELECT *** — fetches unnecessary columns, prevents covering indexes
+• **NOLOCK everywhere** — dirty reads, phantom rows, even crashes. Use READ COMMITTED SNAPSHOT.
+• **Cursors** — row-by-row processing. Replace with set-based logic.
+• **Scalar UDFs in SELECT** — called once per row. Use inline TVFs instead.
+• **NOT IN with NULLable columns** — use NOT EXISTS instead (NULL-safe)
+
+**4. Statistics:**
+• SQL Server uses statistics to estimate row counts
+• Auto-create and auto-update should be ON
+• UPDATE STATISTICS manually after large data changes
+
+**5. Missing Index DMVs:**
+SELECT * FROM sys.dm_db_missing_index_details;
+SELECT * FROM sys.dm_db_missing_index_group_stats;
+
+These tell you what indexes the optimizer WISHES it had. But don't blindly create them all.
+
+**6. Query Store (SQL 2016+):**
+Built-in flight recorder for query performance. Tracks plans, runtimes, and allows you to force specific plans.`
+      },
+      {
+        title: "Blocking, Deadlocks & Concurrency",
+        content: `**The JD specifically mentions blocking and deadlocking. Study this well.**
+
+**How Locking Works:**
+SQL Server uses locks to maintain data integrity during concurrent access.
+
+**Lock Modes:**
+• **Shared (S)** — for reading. Multiple shared locks can coexist.
+• **Exclusive (X)** — for writing. Blocks everything else.
+• **Update (U)** — intent to modify. Prevents conversion deadlocks.
+• **Intent locks** (IS, IX, IU) — signal intent at higher granularity levels.
+
+**Lock Granularity:** Row → Page → Table (escalation at ~5000 locks)
+
+**Detecting Blocking:**
+• sp_who2 — quick view of active sessions
+• sys.dm_exec_requests — current requests with blocking info
+• sys.dm_tran_locks — detailed lock information
+
+**Deadlocks:**
+Two or more sessions each hold a lock the other needs. SQL Server detects this and kills one (the "victim").
+
+**Preventing Deadlocks:**
+• Access tables in the same ORDER across all procedures
+• Keep transactions SHORT — do lookups before BEGIN TRAN
+• Use appropriate isolation levels
+• Add indexes to reduce lock duration
+
+**Isolation Levels:**
+• **READ UNCOMMITTED** — dirty reads allowed (same as NOLOCK)
+• **READ COMMITTED** — default. No dirty reads.
+• **READ COMMITTED SNAPSHOT (RCSI)** — uses row versioning. Readers don't block writers!
+• **REPEATABLE READ** — locks held until end of transaction
+• **SERIALIZABLE** — full range locks, maximum blocking
+• **SNAPSHOT** — optimistic concurrency via row versioning
+
+**Interview Gold:** If asked "how do you handle blocking," say:
+1. Identify the blocker with sys.dm_exec_requests
+2. Check the query and its execution plan
+3. Consider RCSI for read/write contention
+4. Optimize the blocking query (faster = shorter locks)
+5. Keep transactions as short as possible`
+      }
+    ]
+  },
+  {
+    id: 5, title: "SSIS & Database Administration", icon: "📦",
+    sections: [
+      {
+        title: "SSIS Packages — ETL Fundamentals",
+        content: `**The JD explicitly requires SSIS experience. Know these concepts.**
+
+**What is SSIS?**
+SQL Server Integration Services — Microsoft's ETL (Extract, Transform, Load) tool for moving and transforming data.
+
+**Control Flow — the orchestration layer:**
+• Execute SQL Task — run queries
+• Data Flow Task — the actual ETL pipeline
+• Script Task — custom C#/VB.NET code
+• Foreach Loop Container — iterate over files, datasets
+• Sequence Container — group tasks logically
+• Execute Package Task — call other packages
+• Send Mail Task — notifications
+• Precedence Constraints — success/failure/completion arrows between tasks
+
+**Data Flow — inside a Data Flow Task:**
+Sources: OLE DB Source, Flat File Source, Excel Source
+
+Transformations:
+• **Derived Column** — add calculated columns
+• **Conditional Split** — route rows by condition
+• **Lookup** — join with reference data
+• **Aggregate** — GROUP BY operations
+• **Data Conversion** — change data types
+• **Slowly Changing Dimension** — handle SCD logic
+
+Destinations: OLE DB Destination, Flat File, SQL Server Destination
+
+**SSIS Architecture:**
+• Package (.dtsx) — the deployable unit
+• Project Deployment Model (recommended) — deploy to SSISDB catalog
+• Environment Variables — parameterize for different environments
+• SSISDB Catalog — stores packages, execution logs
+
+**Common Interview Scenario:**
+"How would you load a daily file from a vendor?"
+→ Foreach Loop over folder → Data Flow Task → Flat File Source → Data Conversion → OLE DB Destination → Execute SQL Task to process staging → Send Mail on failure
+
+**Error Handling:**
+• Row-level: Redirect error rows to an error output table
+• Task-level: Precedence constraints on failure
+• Package-level: Event handlers (OnError, OnWarning)
+
+**Performance Tips:**
+• Use SQL Server Destination (fastest) when package runs on the server
+• Set batch size and commit size on OLE DB Destination
+• Minimize blocking transformations (Sort, Aggregate)`
+      },
+      {
+        title: "SQL Server Agent & Automation",
+        content: `**The JD mentions "SQL Agent for regular SQL tasks."**
+
+**What is SQL Server Agent?**
+A Windows service that runs scheduled jobs — the task scheduler for SQL Server.
+
+**Job Components:**
+• **Job** — the container
+• **Step** — individual tasks (T-SQL, SSIS, PowerShell, cmdexec)
+• **Schedule** — when to run (recurring, one-time, on-demand)
+• **Alert** — triggered by events (errors, performance conditions)
+• **Operator** — notification recipients (email)
+• **Proxy** — security context for non-SQL steps
+
+**Common Jobs in Practice:**
+• Nightly ETL runs (execute SSIS packages)
+• Index maintenance (reorganize/rebuild)
+• Statistics updates
+• Database backups (full, differential, transaction log)
+• Data purge/archival of old records
+• Health check monitoring
+
+**Job Step Flow Control:**
+Each step can specify:
+On Success → Go to next step / Go to step N / Quit reporting success
+On Failure → Go to next step / Go to step N / Quit reporting failure
+
+**Best Practices:**
+• Always log job outcomes to a custom table
+• Set up failure notifications via Database Mail
+• Use meaningful job and step names
+• Monitor job durations — longer than usual could indicate problems
+• Use Agent tokens for dynamic step commands`
+      },
+      {
+        title: "Backup, Recovery & High Availability",
+        content: `**You should understand these even though the JD doesn't emphasize DBA work.**
+
+**Recovery Models:**
+• **SIMPLE** — no log backups. Log auto-truncates. OK for dev/test.
+• **FULL** — log backups required. Point-in-time recovery possible. Production standard.
+• **BULK-LOGGED** — like FULL but minimally logs bulk operations.
+
+**Backup Types:**
+• **FULL** — complete copy of the database
+• **DIFFERENTIAL** — changes since last FULL backup
+• **TRANSACTION LOG** — changes since last log backup
+
+**Typical Production Schedule:**
+Full backup nightly → Differential every 4-6 hours → Log backup every 15-30 minutes
+
+**High Availability Options:**
+• **Always On Availability Groups** — enterprise HA. Multiple replicas, auto failover, readable secondaries.
+• **Log Shipping** — simple: backup logs, copy, restore on secondary. Low cost.
+• **Database Mirroring** — deprecated but still in use.
+• **Failover Cluster Instance** — OS-level clustering, shared storage.
+
+**Disaster Recovery Metrics:**
+• **RPO** (Recovery Point Objective) — how much data loss is acceptable?
+• **RTO** (Recovery Time Objective) — how quickly must you be back online?
+
+Log backups every 15 min = RPO of 15 min max data loss.`
+      }
+    ]
+  },
+  {
+    id: 6, title: "Database Design & Data Modeling", icon: "📐",
+    sections: [
+      {
+        title: "Schema Design Patterns",
+        content: `**The JD says "identifying business requirements, developing data models."**
+
+**OLTP Design (Online Transaction Processing):**
+• Normalized (3NF or higher)
+• Optimized for writes and single-record lookups
+• Foreign keys enforced
+• Small, focused tables
+
+**OLAP Design (Online Analytical Processing):**
+• Denormalized (star/snowflake schema)
+• Optimized for reads and aggregations
+• Fact tables (measures) + Dimension tables (attributes)
+
+**Star Schema:**
+Fact_PolicyTransactions:
+  PolicyID, DateKey, AgentKey, CarrierKey,
+  PremiumAmount, CommissionAmount
+→ Dim_Date (DateKey, FullDate, Year, Quarter, Month)
+→ Dim_Agent (AgentKey, AgentName, Region, HireDate)
+→ Dim_Carrier (CarrierKey, CarrierName, LOB)
+
+**Slowly Changing Dimensions (SCD):**
+• **Type 1** — overwrite old value (no history)
+• **Type 2** — new row with effective dates and current flag (most common)
+• **Type 3** — add column for previous value (limited history)
+
+**Insurance Domain Schema Ideas:**
+• Clients (demographics, contact info)
+• Agents (licensing, territories)
+• Carriers (products, commission structures)
+• Policies (effective dates, premiums, status)
+• Enrollments (linking clients to policies)
+• Leads (CRM data — SalesRadix is their CRM)
+• Commissions (agent payments)
+
+**Design Principles:**
+• Surrogate keys (INT IDENTITY) for internal references
+• Natural keys (PolicyNumber) for business references
+• Audit columns on every table: CreatedDate, CreatedBy, ModifiedDate, ModifiedBy
+• Soft deletes (IsActive flag) vs hard deletes
+• Consistent naming conventions throughout`
+      },
+      {
+        title: "Power BI Fundamentals",
+        content: `**The JD mentions "familiarity with BI technologies (e.g. Microsoft Power BI)."**
+
+**What is Power BI?**
+Microsoft's business intelligence tool for creating interactive dashboards and reports from data.
+
+**How It Connects to Your Role:**
+As a DB engineer, you'll likely:
+• Create views or stored procedures that Power BI reports consume
+• Optimize queries that Power BI's DirectQuery mode runs against your database
+• Design data models that are BI-friendly (star schemas)
+• Maintain aggregation tables for dashboard performance
+
+**Two Query Modes:**
+• **Import Mode** — data loaded into Power BI's in-memory engine (fast, but stale)
+• **DirectQuery** — queries hit your SQL Server live (always fresh, but your DB handles the load)
+
+**What You Should Know:**
+• **DAX** — Power BI's formula language (similar to Excel). Know it exists.
+• **Power Query (M)** — data transformation language in Power BI's ETL layer
+• **Relationships** — Power BI builds a data model with relationships between tables
+• **Measures vs Calculated Columns** — Measures compute at query time, Calculated Columns at refresh time.
+
+**Performance Impact on Your Database:**
+• DirectQuery can generate complex queries — your indexes need to support them
+• Row-level security in Power BI might need corresponding database views
+• Large reports can generate dozens of simultaneous queries
+
+**Interview Tip:** You don't need to be a Power BI developer. Show awareness of how your database design supports reporting. Mention star schemas, indexed views for aggregations, and query optimization for report queries.`
+      }
+    ]
+  },
+  {
+    id: 7, title: "Monitoring & Troubleshooting", icon: "🔍",
+    sections: [
+      {
+        title: "DMVs — Your Diagnostic Toolkit",
+        content: `**Dynamic Management Views are how you diagnose SQL Server in production.**
+
+**Top Queries by CPU:**
+SELECT TOP 10
+    qs.total_worker_time / qs.execution_count
+        AS avg_cpu,
+    qs.execution_count,
+    SUBSTRING(st.text,
+        (qs.statement_start_offset/2)+1,
+        ((CASE qs.statement_end_offset
+            WHEN -1 THEN DATALENGTH(st.text)
+            ELSE qs.statement_end_offset END
+          - qs.statement_start_offset)/2)+1)
+        AS query_text
+FROM sys.dm_exec_query_stats qs
+CROSS APPLY sys.dm_exec_sql_text(qs.sql_handle) st
+ORDER BY avg_cpu DESC;
+
+**Essential DMVs to Know:**
+• **sys.dm_exec_requests** — currently running queries
+• **sys.dm_exec_sessions** — active sessions
+• **sys.dm_exec_query_stats** — aggregated query performance
+• **sys.dm_os_wait_stats** — what SQL Server is WAITING on (gold mine!)
+• **sys.dm_db_index_usage_stats** — which indexes are being used
+• **sys.dm_db_index_physical_stats** — index fragmentation
+• **sys.dm_db_missing_index_details** — indexes the optimizer wants
+• **sys.dm_tran_locks** — current locks
+
+**Wait Statistics (critical concept):**
+Every query not using CPU is WAITING. Top waits reveal your bottleneck:
+• **CXPACKET** — parallelism waits (not always bad)
+• **PAGEIOLATCH_SH** — reading from disk (need more RAM or faster I/O)
+• **LCK_M_X / LCK_M_S** — lock waits (blocking)
+• **SOS_SCHEDULER_YIELD** — CPU pressure
+• **WRITELOG** — transaction log write delays
+• **ASYNC_NETWORK_IO** — client not consuming results fast enough
+
+**Extended Events (modern tracing):**
+• Lightweight, flexible — ALWAYS prefer over Profiler
+• Capture: slow queries, deadlock graphs, errors
+
+**Performance Monitor (PerfMon) Key Counters:**
+• Buffer Cache Hit Ratio — should be > 99%
+• Page Life Expectancy — higher = better
+• Batch Requests/sec — workload volume
+• SQL Compilations/sec — plan cache effectiveness`
+      },
+      {
+        title: "Real-World Troubleshooting Scenarios",
+        content: `**Expect scenario-based questions in a 2-hour interview.**
+
+**Scenario 1: "The application is slow"**
+1. Check sys.dm_exec_requests — what's running now?
+2. Is there blocking? Check blocking_session_id
+3. Get the execution plan of the slow query
+4. Check STATISTICS IO — how many logical reads?
+5. Look for missing indexes, scans, key lookups
+6. Check if statistics are stale
+7. Check wait stats: what's the query waiting on?
+
+**Scenario 2: "Stored proc used to be fast, now it's slow"**
+Classic parameter sniffing:
+1. Compare actual vs estimated rows in execution plan
+2. Check if plan compiled with atypical parameter values
+3. Solutions: OPTION(RECOMPILE), OPTIMIZE FOR, clear plan cache:
+DBCC FREEPROCCACHE (plan_handle);
+4. Could also be stale statistics or data growth
+
+**Scenario 3: "We're getting deadlocks"**
+1. Enable deadlock trace: DBCC TRACEON (1222, -1) or Extended Events
+2. Read the deadlock graph — identify the two processes and resources
+3. Fix: reorder table access, add indexes, shorten transactions, use RCSI
+
+**Scenario 4: "tempdb is growing out of control"**
+1. Check what's using tempdb:
+   - Version store (snapshot isolation)
+   - Temp tables / table variables
+   - Sorts/hash joins spilling to disk
+2. Query sys.dm_db_file_space_usage and sys.dm_db_session_space_usage
+3. Fix the root cause — don't just shrink (causes fragmentation)
+
+**Scenario 5: "Deploy a schema change to production"**
+1. Script it out — never use the GUI in production
+2. Test in dev → test → pre-prod (as the JD mentions)
+3. Wrap in a transaction with error handling
+4. Include rollback scripts
+5. Check for dependencies: sys.sql_expression_dependencies
+6. Deploy during low-activity windows
+7. Validate after deployment`
+      }
+    ]
+  },
+  {
+    id: 8, title: "Interview Strategy & Cheat Sheet", icon: "🎯",
+    sections: [
+      {
+        title: "2-Hour Interview Game Plan",
+        content: `**How to structure your mindset for a 2-hour live technical interview.**
+
+**Likely Format:**
+• 20-30 min: Conceptual questions (architecture, design, theory)
+• 30-40 min: Live coding / query writing
+• 20-30 min: Performance tuning scenario
+• 15-20 min: Design exercise (model a schema)
+• 10-15 min: Behavioral / team-fit questions
+
+**When Writing Queries Live:**
+• CLARIFY the question — restate it back. Ask about edge cases.
+• Start with the simplest correct answer
+• Talk through your thought process out loud
+• Then optimize if asked
+• Use SET NOCOUNT ON, meaningful aliases, consistent formatting
+
+**When Given a Performance Problem:**
+• "First, I'd check the execution plan"
+• "I'd look at STATISTICS IO for logical reads"
+• "I'd check for missing indexes"
+• "I'd verify statistics are up to date"
+• Propose specific changes and explain the tradeoff
+
+**Phrases That Impress:**
+• "That depends on the cardinality of the data..."
+• "I'd check the execution plan to see if..."
+• "The tradeoff here is between read performance and write overhead..."
+• "In my experience, the biggest wins come from proper indexing and SARGable WHERE clauses..."
+• "I'd use RCSI to reduce reader-writer contention..."
+
+**Company-Specific Prep:**
+Ideal Concepts is an insurance tech company. Their products:
+• **SalesRadix** — agent CRM with leads
+• **InsureMe** — consumer enrollment platform
+• **iWebQuotes** — quoting system
+
+Think about: high-volume lead data, policy lifecycle tracking, commission calculations, multi-state compliance, carrier integrations, enrollment periods with traffic spikes.`
+      },
+      {
+        title: "Quick Reference — Must-Know Commands",
+        content: `**Rapid-fire reference for the interview.**
+
+**Diagnostics:**
+sp_who2                           -- active sessions
+sp_help 'TableName'               -- table structure
+sp_helpindex 'TableName'          -- indexes on table
+sp_helptext 'ProcName'            -- source code
+DBCC CHECKDB                      -- database integrity
+DBCC SHOW_STATISTICS('Tbl','Idx') -- statistics info
+DBCC FREEPROCCACHE                -- clear all plans
+DBCC SQLPERF(LOGSPACE)            -- log file usage
+
+**Useful System Views:**
+sys.tables, sys.columns, sys.indexes
+sys.procedures, sys.views, sys.triggers
+sys.foreign_keys, sys.check_constraints
+INFORMATION_SCHEMA.COLUMNS / TABLES
+
+**Date Manipulation:**
+GETDATE(), SYSDATETIME()
+DATEADD(month, 1, @date)
+DATEDIFF(day, @start, @end)
+EOMONTH(@date)                    -- last day of month
+FORMAT(@date, 'yyyy-MM-dd')
+
+**String Functions:**
+STRING_AGG(column, ',')           -- SQL 2017+
+CONCAT(a, b, c)                   -- NULL-safe
+TRIM(), LTRIM(), RTRIM()
+CHARINDEX(), PATINDEX(), STUFF()
+
+**JSON Support (SQL 2016+):**
+FOR JSON PATH                     -- result set to JSON
+JSON_VALUE(@json, '$.key')        -- extract scalar
+OPENJSON(@json)                   -- JSON to rows
+
+**NULL Handling:**
+ISNULL(a, default)                -- SQL Server, 2 args
+COALESCE(a, b, c)                 -- ANSI, multiple args
+NULLIF(a, b)                      -- NULL if a = b
+
+**Pagination:**
+SELECT * FROM Policies
+ORDER BY PolicyID
+OFFSET 20 ROWS
+FETCH NEXT 10 ROWS ONLY;`
+      }
+    ]
+  }
+];
+
+// ── State ──
+let activeChapter = 0;
+let activeSection = 0;
+let completedSections = new Set();
+
+// Load from localStorage
+try {
+  const saved = localStorage.getItem('sqlprep-completed');
+  if (saved) completedSections = new Set(JSON.parse(saved));
+} catch(e) {}
+
+function saveProgress() {
+  try { localStorage.setItem('sqlprep-completed', JSON.stringify([...completedSections])); } catch(e) {}
+}
+
+function openSidebar() {
+  document.getElementById('sidebar').classList.add('open');
+  document.getElementById('overlay').classList.add('show');
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('show');
+}
+
+function renderSidebar() {
+  const totalSections = chapters.reduce((a, c) => a + c.sections.length, 0);
+  const progress = Math.round((completedSections.size / totalSections) * 100);
+
+  let html = `
+    <div class="sidebar-logo">
+      <div class="logo-badge">SQL</div>
+      <div class="logo-title">Interview Prep</div>
+      <div class="logo-sub">Sr. Database Engineer — Ideal Concepts</div>
+    </div>
+    <div class="progress-area">
+      <div class="progress-track"><div class="progress-fill" style="width:${progress}%"></div></div>
+      <div class="progress-label">${completedSections.size}/${totalSections} sections · ${progress}%</div>
+    </div>
+    <nav class="nav">`;
+
+  chapters.forEach((ch, ci) => {
+    const chDone = ch.sections.filter((_, si) => completedSections.has(`${ch.id}-${si}`)).length;
+    html += `<div class="chapter-item ${ci === activeChapter ? 'active' : ''}" onclick="selectChapter(${ci})">
+      <span class="chapter-icon">${ch.icon}</span>
+      <div><div class="chapter-title">${ch.title}</div><div class="chapter-meta">${chDone}/${ch.sections.length} done</div></div>
+    </div>`;
+    if (ci === activeChapter) {
+      html += `<div class="section-list">`;
+      ch.sections.forEach((sec, si) => {
+        const done = completedSections.has(`${ch.id}-${si}`);
+        html += `<div class="section-item ${si === activeSection ? 'active' : ''}" onclick="selectSection(${si})">
+          <span class="check ${done ? 'done' : ''}">${done ? '✓' : '○'}</span>
+          <span>${sec.title}</span>
+        </div>`;
+      });
+      html += `</div>`;
+    }
+  });
+  html += `</nav>`;
+  document.getElementById('sidebar').innerHTML = html;
+}
+
+function renderContent() {
+  const ch = chapters[activeChapter];
+  const sec = ch.sections[activeSection];
+  const key = `${ch.id}-${activeSection}`;
+  const done = completedSections.has(key);
+  const isFirst = activeChapter === 0 && activeSection === 0;
+  const isLast = activeChapter === chapters.length - 1 && activeSection === ch.sections.length - 1;
+
+  document.getElementById('mobileTitle').textContent = `${ch.icon} ${ch.title}`;
+
+  let bodyHtml = formatContent(sec.content);
+
+  document.getElementById('content').innerHTML = `
+    <div class="breadcrumb">Chapter ${activeChapter + 1} of ${chapters.length} → Section ${activeSection + 1} of ${ch.sections.length}</div>
+    <h1 class="page-title">${sec.title}</h1>
+    <div class="body-content">${bodyHtml}</div>
+    <div class="footer">
+      <button class="btn btn-outline" onclick="goPrev()" ${isFirst ? 'disabled' : ''}>← Previous</button>
+      <button class="btn ${done ? 'btn-complete' : 'btn-mark'}" onclick="toggleComplete()">${done ? '✓ Completed' : 'Mark Complete'}</button>
+      <button class="btn btn-primary" onclick="goNext()" ${isLast ? 'disabled' : ''}>Next →</button>
+    </div>`;
+
+  window.scrollTo(0, 0);
+  document.querySelector('.main').scrollTo(0, 0);
+}
+
+function formatContent(text) {
+  const lines = text.split('\n');
+  let html = '';
+  const sqlKeywords = /^(SELECT|FROM|WHERE|JOIN|LEFT|RIGHT|INNER|FULL|CROSS|GROUP|ORDER|HAVING|INSERT|UPDATE|DELETE|CREATE|ALTER|DROP|MERGE|WITH|SET|BEGIN|END|IF|ELSE|DECLARE|EXEC|RETURN|THROW|UNION|PIVOT|CASE|WHEN|THEN|INTO|VALUES|ON|AS|AND|OR|NOT|IN|EXISTS|BETWEEN|LIKE|OPTION|USING|MATCHED|OFFSET|FETCH|GO|USE|DBCC|BACKUP|RESTORE|RETURNS|TABLE)/i;
+  const indentedSql = /^\s{2,}(SELECT|FROM|WHERE|JOIN|SET|AND|OR|WHEN|THEN|ELSE|END|ON|ORDER|GROUP|HAVING|\(|,|--|\)|INTO|VALUES|AS|RETURN|CASE|INSERT|UPDATE|DELETE|CROSS|OUTER|UNION|USING|NOT|OPTION|ROWS|BETWEEN)/i;
+
+  for (const line of lines) {
+    if (line.startsWith('**') && line.endsWith('**')) {
+      html += `<h3>${line.replace(/\*\*/g, '')}</h3>`;
+    } else if (line.match(/^• /)) {
+      html += `<div class="bullet"><span class="bullet-dot">→</span><span>${inlineBold(line.substring(2))}</span></div>`;
+    } else if (line.match(/^-- /)) {
+      html += `<div class="comment-line">${esc(line)}</div>`;
+    } else if ((line.trim().match(sqlKeywords) && !line.startsWith('•')) || line.trim().match(indentedSql)) {
+      html += `<div class="code-line">${esc(line)}</div>`;
+    } else if (line.trim() === '') {
+      html += `<div class="spacer"></div>`;
+    } else {
+      html += `<p>${inlineBold(line)}</p>`;
+    }
+  }
+  return html;
+}
+
+function inlineBold(text) {
+  return esc(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+}
+
+function esc(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function selectChapter(ci) { activeChapter = ci; activeSection = 0; render(); closeSidebar(); }
+function selectSection(si) { activeSection = si; render(); closeSidebar(); }
+
+function goNext() {
+  const ch = chapters[activeChapter];
+  if (activeSection < ch.sections.length - 1) activeSection++;
+  else if (activeChapter < chapters.length - 1) { activeChapter++; activeSection = 0; }
+  render();
+}
+function goPrev() {
+  if (activeSection > 0) activeSection--;
+  else if (activeChapter > 0) { activeChapter--; activeSection = chapters[activeChapter].sections.length - 1; }
+  render();
+}
+function toggleComplete() {
+  const key = `${chapters[activeChapter].id}-${activeSection}`;
+  if (completedSections.has(key)) completedSections.delete(key);
+  else completedSections.add(key);
+  saveProgress();
+  render();
+}
+
+function render() { renderSidebar(); renderContent(); }
+render();
+</script>
+</body>
+</html>
